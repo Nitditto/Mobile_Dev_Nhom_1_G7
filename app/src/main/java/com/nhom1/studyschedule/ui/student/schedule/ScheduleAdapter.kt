@@ -12,7 +12,8 @@ import com.nhom1.studyschedule.util.DateTimeUtils
 import com.nhom1.studyschedule.util.StatusUi
 
 class ScheduleAdapter(
-    private val onClick: (ScheduleItem) -> Unit
+    private val onClick: (ScheduleItem) -> Unit,
+    private val onDelete: (ScheduleItem) -> Unit
 ) : ListAdapter<ScheduleItem, ScheduleAdapter.Holder>(Diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(
@@ -24,8 +25,10 @@ class ScheduleAdapter(
     inner class Holder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ScheduleItem) = bindSchedule(binding, item).also {
+        fun bind(item: ScheduleItem) {
+            bindSchedule(binding, item)
             binding.root.setOnClickListener { onClick(item) }
+            binding.btnDelete.setOnClickListener { onDelete(item) }
         }
     }
 

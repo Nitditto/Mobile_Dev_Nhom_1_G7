@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /** Personal schedules of the logged-in student; [studentId] comes from the session. */
 class ScheduleViewModel(
@@ -25,5 +26,9 @@ class ScheduleViewModel(
 
     fun setQuery(value: String) {
         query.value = value
+    }
+
+    fun delete(item: ScheduleItem) {
+        viewModelScope.launch { dao.deleteById(item.id) }
     }
 }

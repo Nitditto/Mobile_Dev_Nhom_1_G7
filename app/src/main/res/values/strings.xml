@@ -51,6 +51,7 @@
     <string name="schedule_subject">%1$s (%2$s)</string>
     <string name="schedule_date_time">%1$s · %2$s – %3$s</string>
     <string name="schedule_location">Địa điểm: %1$s</string>
+    <string name="schedule_delete_message">Xóa lịch học \"%1$s\" ngày %2$s lúc %3$s?</string>
     <string name="status_pending">Chờ xác nhận</string>
     <string name="status_confirmed">Đã xác nhận</string>
     <string name="status_cancelled">Đã hủy</string>

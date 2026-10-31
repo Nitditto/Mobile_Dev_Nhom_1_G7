@@ -12,6 +12,8 @@ import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
+import com.nhom1.studyschedule.ui.common.confirmDelete
+import com.nhom1.studyschedule.util.DateTimeUtils
 import kotlinx.coroutines.launch
 
 /** Student tab "Lịch học": own schedules, searchable by subject name/code or location. */
@@ -22,7 +24,7 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = ScheduleAdapter(onClick = ::onItemClick)
+        val adapter = ScheduleAdapter(onClick = ::onItemClick, onDelete = ::confirmDeleteSchedule)
 
         binding.recyclerView.adapter = adapter
         binding.fabAdd.isVisible = false
@@ -41,4 +43,14 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
     }
 
     private fun onItemClick(item: ScheduleItem) = Unit
+
+    private fun confirmDeleteSchedule(item: ScheduleItem) {
+        val message = getString(
+            R.string.schedule_delete_message,
+            item.subjectName,
+            DateTimeUtils.displayDate(item.studyDate),
+            item.startTime
+        )
+        confirmDelete(message) { viewModel.delete(item) }
+    }
 }
