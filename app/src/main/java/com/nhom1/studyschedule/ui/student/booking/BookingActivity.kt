@@ -2,6 +2,7 @@ package com.nhom1.studyschedule.ui.student.booking
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -10,10 +11,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.nhom1.studyschedule.R
+import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.Subject
+import com.nhom1.studyschedule.data.repository.BookingResult
+import com.nhom1.studyschedule.data.repository.BookingResult.Field
+import com.nhom1.studyschedule.data.repository.ScheduleRepository
 import com.nhom1.studyschedule.databinding.ActivityBookingBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import com.nhom1.studyschedule.util.DateTimeUtils
@@ -22,7 +29,13 @@ import kotlinx.coroutines.launch
 
 class BookingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookingBinding
-    private val viewModel by appViewModels { BookingViewModel(it.database.subjectDao()) }
+    private val viewModel by appViewModels {
+        BookingViewModel(
+            it.database.subjectDao(),
+            ScheduleRepository(it.database),
+            it.session.studentId
+        )
+    }
 
     private var subjects: List<Subject> = emptyList()
 
@@ -39,7 +52,11 @@ class BookingActivity : AppCompatActivity() {
         binding.etDate.setOnClickListener { pickDate() }
         binding.etStartTime.setOnClickListener { pickTime(isStart = true) }
         binding.etEndTime.setOnClickListener { pickTime(isStart = false) }
-        binding.etLocation.doAfterTextChanged { viewModel.setLocation(it?.toString().orEmpty()) }
+        binding.etLocation.doAfterTextChanged {
+            viewModel.setLocation(it?.toString().orEmpty())
+            binding.tilLocation.error = null
+        }
+        binding.btnSave.setOnClickListener { save() }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -67,6 +84,46 @@ class BookingActivity : AppCompatActivity() {
         if (binding.etLocation.text?.toString() != form.location) {
             binding.etLocation.setText(form.location)
         }
+    }
+
+    private fun save() {
+        binding.btnSave.isEnabled = false
+        lifecycleScope.launch {
+            when (val result = viewModel.save()) {
+                BookingResult.Success -> {
+                    Toast.makeText(this@BookingActivity, R.string.booking_saved, Toast.LENGTH_SHORT)
+                        .show()
+                    finish()
+                }
+                is BookingResult.Conflict -> showConflict(result.with)
+                is BookingResult.Invalid -> fieldLayout(result.field).error = getString(result.reason)
+            }
+            binding.btnSave.isEnabled = true
+        }
+    }
+
+    private fun fieldLayout(field: Field): TextInputLayout = when (field) {
+        Field.SUBJECT -> binding.tilSubject
+        Field.DATE -> binding.tilDate
+        Field.START_TIME -> binding.tilStartTime
+        Field.END_TIME -> binding.tilEndTime
+        Field.LOCATION -> binding.tilLocation
+    }
+
+    private fun showConflict(other: ScheduleItem) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.booking_conflict_title)
+            .setMessage(
+                getString(
+                    R.string.booking_conflict_message,
+                    other.subjectName,
+                    DateTimeUtils.displayDate(other.studyDate),
+                    other.startTime,
+                    other.endTime
+                )
+            )
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     private fun subjectLabel(subject: Subject) = "${subject.subjectCode} – ${subject.subjectName}"

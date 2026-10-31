@@ -70,6 +70,11 @@
     <string name="error_booking_time_order">Giờ kết thúc phải sau giờ bắt đầu</string>
     <string name="error_booking_past_date">Ngày học không được ở quá khứ</string>
     <string name="error_booking_past_time">Giờ bắt đầu đã qua</string>
+    <string name="error_booking_pick_date">Vui lòng chọn ngày học</string>
+    <string name="error_booking_pick_time">Vui lòng chọn giờ</string>
+    <string name="booking_conflict_title">Trùng lịch</string>
+    <string name="booking_conflict_message">Trùng với buổi \"%1$s\" ngày %2$s, %3$s – %4$s. Vui lòng chọn giờ khác.</string>
+    <string name="booking_saved">Đã đặt lịch, đang chờ xác nhận</string>
 
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>
