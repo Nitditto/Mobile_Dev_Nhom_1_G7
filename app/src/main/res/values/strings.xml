@@ -57,6 +57,15 @@
     <string name="status_confirmed">Đã xác nhận</string>
     <string name="status_cancelled">Đã hủy</string>
 
+    <string name="booking_title_new">Đặt lịch học</string>
+    <string name="booking_title_edit">Sửa lịch học</string>
+    <string name="hint_booking_subject">Môn học</string>
+    <string name="hint_booking_date">Ngày học</string>
+    <string name="hint_booking_start">Bắt đầu</string>
+    <string name="hint_booking_end">Kết thúc</string>
+    <string name="hint_booking_location">Địa điểm</string>
+    <string name="action_book">Đặt lịch</string>
+    <string name="action_back">Quay lại</string>
     <string name="error_booking_subject">Vui lòng chọn môn học</string>
     <string name="error_booking_time_order">Giờ kết thúc phải sau giờ bắt đầu</string>
     <string name="error_booking_past_date">Ngày học không được ở quá khứ</string>
