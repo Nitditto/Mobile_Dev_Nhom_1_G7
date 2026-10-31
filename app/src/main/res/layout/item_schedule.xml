@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- One study session; reused by the schedule list and the calendar day/week views. -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.CardView.Outlined"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -44,14 +45,28 @@
                 android:maxLines="1"
                 android:textAppearance="?attr/textAppearanceBodyMedium" />
 
-            <TextView
-                android:id="@+id/tvStatus"
+            <!-- Display only; colors come from StatusUi.bindChip. -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipStatus"
+                style="@style/Widget.Material3.Chip.Assist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:clickable="false"
+                android:focusable="false"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorSecondary" />
+                app:chipMinHeight="28dp"
+                app:ensureMinTouchTargetSize="false" />
         </LinearLayout>
+
+        <!-- Status menu (also on long-press); hidden on screens without it (calendar). -->
+        <ImageButton
+            android:id="@+id/btnMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_more"
+            android:src="@drawable/ic_more_vert" />
 
         <!-- Hidden on screens without delete (calendar). -->
         <ImageButton

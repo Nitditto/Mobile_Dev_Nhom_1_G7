@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Schedule status accents: chip text/icon; the chip fill is the same color at low alpha. -->
+    <color name="status_pending">#E65100</color>
+    <color name="status_confirmed">#2E7D32</color>
+    <color name="status_cancelled">#757575</color>
+</resources>

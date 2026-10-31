@@ -11,27 +11,53 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.ScheduleItem
+import com.nhom1.studyschedule.data.entity.ScheduleStatus
+import com.nhom1.studyschedule.data.repository.BookingResult
+import com.nhom1.studyschedule.data.repository.ScheduleRepository
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import com.nhom1.studyschedule.ui.common.confirmDelete
+import com.nhom1.studyschedule.ui.common.showScheduleConflict
+import com.nhom1.studyschedule.ui.student.booking.BookingActivity
 import com.nhom1.studyschedule.util.DateTimeUtils
+import com.nhom1.studyschedule.util.StatusUi
 import kotlinx.coroutines.launch
 
 /** Student tab "Lịch học": own schedules, searchable by subject name/code or location. */
 class ScheduleListFragment : Fragment(R.layout.fragment_list) {
     private val viewModel by appViewModels {
-        ScheduleViewModel(it.database.studyScheduleDao(), it.session.studentId)
+        ScheduleViewModel(
+            it.database.studyScheduleDao(),
+            ScheduleRepository(it.database),
+            it.session.studentId
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = ScheduleAdapter(onClick = ::onItemClick, onDelete = ::confirmDeleteSchedule)
+        val adapter = ScheduleAdapter(
+            onClick = ::onItemClick,
+            onDelete = ::confirmDeleteSchedule,
+            onStatusChange = ::changeStatus
+        )
 
         binding.recyclerView.adapter = adapter
         binding.fabAdd.setOnClickListener { onAddClick() }
         binding.tilSearch.hint = getString(R.string.schedule_search_hint)
         binding.tvEmpty.text = getString(R.string.schedule_empty)
         binding.etSearch.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
+
+        binding.filterScroll.isVisible = true
+        binding.chipGroupStatus.setOnCheckedStateChangeListener { _, checkedIds ->
+            viewModel.setStatusFilter(
+                when (checkedIds.firstOrNull()) {
+                    R.id.chipPending -> ScheduleStatus.PENDING
+                    R.id.chipConfirmed -> ScheduleStatus.CONFIRMED
+                    R.id.chipCancelled -> ScheduleStatus.CANCELLED
+                    else -> null
+                }
+            )
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -45,14 +71,28 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
 
     /** FAB: book a new session. */
     private fun onAddClick() {
-        // TODO(Trường): open BookingActivity in create mode.
-        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+        startActivity(BookingActivity.intent(requireContext()))
     }
 
-    /** Item tap: edit the session; pass item.id as BookingActivity.EXTRA_SCHEDULE_ID. */
+    /** Item tap: edit the session. */
     private fun onItemClick(item: ScheduleItem) {
-        // TODO(Trường): open BookingActivity in edit mode with item.id.
-        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+        startActivity(BookingActivity.intent(requireContext(), item.id))
+    }
+
+    /** Item ⋮ menu / long-press: confirm, cancel or restore to pending. */
+    private fun changeStatus(item: ScheduleItem, newStatus: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val result = viewModel.changeStatus(item, newStatus)) {
+                BookingResult.Success -> Toast.makeText(
+                    requireContext(),
+                    getString(R.string.status_changed, StatusUi.label(requireContext(), newStatus)),
+                    Toast.LENGTH_SHORT
+                ).show()
+                is BookingResult.Conflict -> requireContext().showScheduleConflict(result.with)
+                is BookingResult.Invalid ->
+                    Toast.makeText(requireContext(), result.reason, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun confirmDeleteSchedule(item: ScheduleItem) {
