@@ -50,5 +50,5 @@ fun bindSchedule(binding: ItemScheduleBinding, item: ScheduleItem) {
         item.endTime
     )
     binding.tvLocation.text = context.getString(R.string.schedule_location, item.location)
-    binding.tvStatus.text = StatusUi.label(context, item.status)
+    StatusUi.bindChip(binding.chipStatus, item.status)
 }
