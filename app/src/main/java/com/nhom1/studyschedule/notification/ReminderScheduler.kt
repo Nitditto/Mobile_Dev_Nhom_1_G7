@@ -49,6 +49,17 @@ object ReminderScheduler {
             .forEach { schedule(app, it) }
     }
 
+    /**
+     * Drops every pending reminder of the student, e.g. on logout so the next account on this
+     * device does not get them. Only upcoming non-cancelled sessions can have an alarm armed.
+     */
+    suspend fun cancelAll(context: Context, studentId: Long) {
+        val app = context.applicationContext as StudyScheduleApp
+        app.database.studyScheduleDao()
+            .getUpcoming(studentId, DateTimeUtils.today())
+            .forEach { cancel(app, it.id) }
+    }
+
     private fun alarmManager(context: Context) =
         context.getSystemService(AlarmManager::class.java)
 

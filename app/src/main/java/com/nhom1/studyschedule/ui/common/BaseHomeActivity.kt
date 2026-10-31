@@ -5,10 +5,14 @@ import android.os.Bundle
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.StudyScheduleApp
+import com.nhom1.studyschedule.data.SessionManager
 import com.nhom1.studyschedule.databinding.ActivityHomeBinding
+import com.nhom1.studyschedule.notification.ReminderScheduler
 import com.nhom1.studyschedule.ui.login.LoginActivity
+import kotlinx.coroutines.launch
 
 /**
  * Shared shell for both roles: toolbar with logout + bottom navigation + fragment container.
@@ -47,10 +51,17 @@ abstract class BaseHomeActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        (application as StudyScheduleApp).session.clear()
-        startActivity(
-            Intent(this, LoginActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        )
+        val session = (application as StudyScheduleApp).session
+        lifecycleScope.launch {
+            // Otherwise the next account logging in on this device gets this student's reminders.
+            if (session.studentId != SessionManager.NO_ID) {
+                ReminderScheduler.cancelAll(this@BaseHomeActivity, session.studentId)
+            }
+            session.clear()
+            startActivity(
+                Intent(this@BaseHomeActivity, LoginActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
+        }
     }
 }
