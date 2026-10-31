@@ -9,6 +9,7 @@ import com.nhom1.studyschedule.StudyScheduleApp
 import com.nhom1.studyschedule.data.SessionManager
 import com.nhom1.studyschedule.data.entity.Role
 import com.nhom1.studyschedule.databinding.ActivityLoginBinding
+import com.nhom1.studyschedule.notification.ReminderScheduler
 import com.nhom1.studyschedule.ui.admin.AdminHomeActivity
 import com.nhom1.studyschedule.ui.student.StudentHomeActivity
 import com.nhom1.studyschedule.util.PasswordHasher
@@ -53,6 +54,9 @@ class LoginActivity : AppCompatActivity() {
                 SessionManager.NO_ID
             }
             app.session.save(account.id, account.username, account.role, studentId)
+            if (studentId != SessionManager.NO_ID) {
+                ReminderScheduler.rescheduleAll(this@LoginActivity, studentId)
+            }
             openHome(account.role)
         }
     }
