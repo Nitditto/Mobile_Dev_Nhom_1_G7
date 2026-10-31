@@ -2,6 +2,7 @@ package com.nhom1.studyschedule.ui.student.schedule
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -27,7 +28,7 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
         val adapter = ScheduleAdapter(onClick = ::onItemClick, onDelete = ::confirmDeleteSchedule)
 
         binding.recyclerView.adapter = adapter
-        binding.fabAdd.isVisible = false
+        binding.fabAdd.setOnClickListener { onAddClick() }
         binding.tilSearch.hint = getString(R.string.schedule_search_hint)
         binding.tvEmpty.text = getString(R.string.schedule_empty)
         binding.etSearch.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
@@ -42,7 +43,17 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
         }
     }
 
-    private fun onItemClick(item: ScheduleItem) = Unit
+    /** FAB: book a new session. */
+    private fun onAddClick() {
+        // TODO(Trường): open BookingActivity in create mode.
+        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+    }
+
+    /** Item tap: edit the session; pass item.id as BookingActivity.EXTRA_SCHEDULE_ID. */
+    private fun onItemClick(item: ScheduleItem) {
+        // TODO(Trường): open BookingActivity in edit mode with item.id.
+        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+    }
 
     private fun confirmDeleteSchedule(item: ScheduleItem) {
         val message = getString(
