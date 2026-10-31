@@ -7,13 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nhom1.studyschedule.R
+import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.databinding.ItemDayHeaderBinding
 import com.nhom1.studyschedule.databinding.ItemScheduleBinding
 import com.nhom1.studyschedule.ui.student.schedule.bindSchedule
 import com.nhom1.studyschedule.util.DateTimeUtils
 
 /** Day/week view: date headers interleaved with that date's sessions (reuses item_schedule). */
-class DayGroupAdapter : ListAdapter<DayRow, RecyclerView.ViewHolder>(Diff) {
+class DayGroupAdapter(
+    private val onSessionClick: (ScheduleItem) -> Unit
+) : ListAdapter<DayRow, RecyclerView.ViewHolder>(Diff) {
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is DayRow.Header -> TYPE_HEADER
@@ -48,12 +51,14 @@ class DayGroupAdapter : ListAdapter<DayRow, RecyclerView.ViewHolder>(Diff) {
         }
     }
 
-    class SessionHolder(private val binding: ItemScheduleBinding) :
+    inner class SessionHolder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(row: DayRow.Session) {
             bindSchedule(binding, row.item)
-            // Read-only here: edit, status changes and delete live in the schedule list.
+            // Tap opens the same edit screen as the schedule list; status changes and
+            // delete stay in the list, so the calendar has no action buttons.
+            binding.root.setOnClickListener { onSessionClick(row.item) }
             binding.btnMore.isVisible = false
             binding.btnDelete.isVisible = false
         }

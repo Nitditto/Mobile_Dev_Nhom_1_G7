@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.databinding.FragmentCalendarBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
+import com.nhom1.studyschedule.ui.student.booking.BookingActivity
 import com.nhom1.studyschedule.util.DateTimeUtils
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentCalendarBinding.bind(view)
-        val dayAdapter = DayGroupAdapter()
+        val dayAdapter = DayGroupAdapter(onSessionClick = { item ->
+            startActivity(BookingActivity.intent(requireContext(), item.id))
+        })
         val monthAdapter = MonthGridAdapter(onDayClick = viewModel::openDay)
 
         binding.rvDays.adapter = dayAdapter
