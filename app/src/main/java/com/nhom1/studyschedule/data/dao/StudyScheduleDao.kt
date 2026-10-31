@@ -25,6 +25,9 @@ interface StudyScheduleDao {
     @Delete
     suspend fun delete(schedule: StudySchedule)
 
+    @Query("DELETE FROM StudySchedule WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
     @Query("SELECT * FROM StudySchedule WHERE id = :id")
     suspend fun getById(id: Long): StudySchedule?
 
