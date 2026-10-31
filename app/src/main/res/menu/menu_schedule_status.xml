@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status actions of one schedule; the item matching the current status is hidden. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_status_confirm"
+        android:title="@string/action_status_confirm" />
+    <item
+        android:id="@+id/action_status_cancel"
+        android:title="@string/action_status_cancel" />
+    <item
+        android:id="@+id/action_status_pending"
+        android:title="@string/action_status_pending" />
+</menu>

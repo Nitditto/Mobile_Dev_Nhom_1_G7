@@ -59,6 +59,15 @@
                 app:ensureMinTouchTargetSize="false" />
         </LinearLayout>
 
+        <!-- Status menu (also on long-press); hidden on screens without it (calendar). -->
+        <ImageButton
+            android:id="@+id/btnMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_more"
+            android:src="@drawable/ic_more_vert" />
+
         <!-- Hidden on screens without delete (calendar). -->
         <ImageButton
             android:id="@+id/btnDelete"

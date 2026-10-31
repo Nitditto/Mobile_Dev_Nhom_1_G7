@@ -32,6 +32,26 @@ class ScheduleRepository(db: AppDatabase) {
             BookingResult.Success
         }
 
+    /**
+     * Pending / Confirmed / Cancelled. Only the status changes, so date/time rules are not
+     * re-checked (a past session can still be marked). Leaving CANCELLED re-checks conflicts,
+     * because another session may have taken that slot meanwhile.
+     */
+    suspend fun changeStatus(id: Long, newStatus: String): BookingResult {
+        val current = dao.getById(id)
+            ?: return BookingResult.Invalid(Field.SUBJECT, R.string.error_booking_missing)
+        if (current.status == newStatus) return BookingResult.Success
+
+        if (current.status == ScheduleStatus.CANCELLED) {
+            dao.findConflict(
+                current.studentId, current.studyDate, current.startTime, current.endTime,
+                excludeId = current.id
+            )?.let { return BookingResult.Conflict(it) }
+        }
+        dao.updateStatus(id, newStatus)
+        return BookingResult.Success
+    }
+
     private suspend fun validate(s: StudySchedule): BookingResult? {
         if (s.subjectId == 0L) return BookingResult.Invalid(Field.SUBJECT, R.string.error_booking_subject)
         if (s.location.isBlank()) return BookingResult.Invalid(Field.LOCATION, R.string.error_required)

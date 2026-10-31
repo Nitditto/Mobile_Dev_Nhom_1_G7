@@ -13,18 +13,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.nhom1.studyschedule.R
-import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.Subject
 import com.nhom1.studyschedule.data.repository.BookingResult
 import com.nhom1.studyschedule.data.repository.BookingResult.Field
 import com.nhom1.studyschedule.data.repository.ScheduleRepository
 import com.nhom1.studyschedule.databinding.ActivityBookingBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
+import com.nhom1.studyschedule.ui.common.showScheduleConflict
 import com.nhom1.studyschedule.util.DateTimeUtils
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -103,7 +102,7 @@ class BookingActivity : AppCompatActivity() {
                     Toast.makeText(this@BookingActivity, message, Toast.LENGTH_SHORT).show()
                     finish()
                 }
-                is BookingResult.Conflict -> showConflict(result.with)
+                is BookingResult.Conflict -> showScheduleConflict(result.with)
                 is BookingResult.Invalid -> fieldLayout(result.field).error = getString(result.reason)
             }
             binding.btnSave.isEnabled = true
@@ -116,22 +115,6 @@ class BookingActivity : AppCompatActivity() {
         Field.START_TIME -> binding.tilStartTime
         Field.END_TIME -> binding.tilEndTime
         Field.LOCATION -> binding.tilLocation
-    }
-
-    private fun showConflict(other: ScheduleItem) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.booking_conflict_title)
-            .setMessage(
-                getString(
-                    R.string.booking_conflict_message,
-                    other.subjectName,
-                    DateTimeUtils.displayDate(other.studyDate),
-                    other.startTime,
-                    other.endTime
-                )
-            )
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
     }
 
     private fun subjectLabel(subject: Subject) = "${subject.subjectCode} – ${subject.subjectName}"

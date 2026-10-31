@@ -2,6 +2,7 @@ package com.nhom1.studyschedule.ui.student.schedule
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -11,22 +12,34 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.ScheduleStatus
+import com.nhom1.studyschedule.data.repository.BookingResult
+import com.nhom1.studyschedule.data.repository.ScheduleRepository
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import com.nhom1.studyschedule.ui.common.confirmDelete
+import com.nhom1.studyschedule.ui.common.showScheduleConflict
 import com.nhom1.studyschedule.ui.student.booking.BookingActivity
 import com.nhom1.studyschedule.util.DateTimeUtils
+import com.nhom1.studyschedule.util.StatusUi
 import kotlinx.coroutines.launch
 
 /** Student tab "Lịch học": own schedules, searchable by subject name/code or location. */
 class ScheduleListFragment : Fragment(R.layout.fragment_list) {
     private val viewModel by appViewModels {
-        ScheduleViewModel(it.database.studyScheduleDao(), it.session.studentId)
+        ScheduleViewModel(
+            it.database.studyScheduleDao(),
+            ScheduleRepository(it.database),
+            it.session.studentId
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = ScheduleAdapter(onClick = ::onItemClick, onDelete = ::confirmDeleteSchedule)
+        val adapter = ScheduleAdapter(
+            onClick = ::onItemClick,
+            onDelete = ::confirmDeleteSchedule,
+            onStatusChange = ::changeStatus
+        )
 
         binding.recyclerView.adapter = adapter
         binding.fabAdd.setOnClickListener { onAddClick() }
@@ -64,6 +77,22 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
     /** Item tap: edit the session. */
     private fun onItemClick(item: ScheduleItem) {
         startActivity(BookingActivity.intent(requireContext(), item.id))
+    }
+
+    /** Item ⋮ menu / long-press: confirm, cancel or restore to pending. */
+    private fun changeStatus(item: ScheduleItem, newStatus: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val result = viewModel.changeStatus(item, newStatus)) {
+                BookingResult.Success -> Toast.makeText(
+                    requireContext(),
+                    getString(R.string.status_changed, StatusUi.label(requireContext(), newStatus)),
+                    Toast.LENGTH_SHORT
+                ).show()
+                is BookingResult.Conflict -> requireContext().showScheduleConflict(result.with)
+                is BookingResult.Invalid ->
+                    Toast.makeText(requireContext(), result.reason, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun confirmDeleteSchedule(item: ScheduleItem) {
