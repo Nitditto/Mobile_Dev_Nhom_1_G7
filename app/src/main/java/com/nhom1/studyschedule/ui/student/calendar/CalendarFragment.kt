@@ -29,6 +29,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         binding.rvDays.adapter = dayAdapter
         binding.rvMonth.adapter = monthAdapter
+        // The default add/change animation resets alpha to 1 and would undo the faded
+        // out-of-month cells; the grid is replaced wholesale on navigation anyway.
+        binding.rvMonth.itemAnimator = null
         addWeekdayLabels(binding.weekdayRow)
 
         binding.toggleMode.addOnButtonCheckedListener { _, buttonId, isChecked ->
