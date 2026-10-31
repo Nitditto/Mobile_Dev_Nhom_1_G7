@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme: lighter tones of the same hues so chip text stays readable on dark surfaces. -->
+    <color name="status_pending">#FFB74D</color>
+    <color name="status_confirmed">#81C784</color>
+    <color name="status_cancelled">#BDBDBD</color>
+</resources>
