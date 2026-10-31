@@ -33,7 +33,7 @@ class BookingActivity : AppCompatActivity() {
     private val viewModel by appViewModels {
         BookingViewModel(
             it.database.subjectDao(),
-            ScheduleRepository(it.database),
+            ScheduleRepository(it),
             it.session.studentId,
             intent.getLongExtra(EXTRA_SCHEDULE_ID, BookingViewModel.NEW)
         )

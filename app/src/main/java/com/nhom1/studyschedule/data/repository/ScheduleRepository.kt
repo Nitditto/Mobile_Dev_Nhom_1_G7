@@ -1,7 +1,7 @@
 package com.nhom1.studyschedule.data.repository
 
 import com.nhom1.studyschedule.R
-import com.nhom1.studyschedule.data.AppDatabase
+import com.nhom1.studyschedule.StudyScheduleApp
 import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.ScheduleStatus
 import com.nhom1.studyschedule.data.entity.StudySchedule
@@ -12,10 +12,11 @@ import java.time.LocalTime
 /**
  * Every write to StudySchedule goes through here so validation and side effects
  * (reminders, change notifications) live in one place: each successful write ends
- * with [onScheduleChanged].
+ * with [onScheduleChanged]. Takes the app (not just the database) because AlarmManager
+ * and notifications need a Context.
  */
-class ScheduleRepository(db: AppDatabase) {
-    private val dao = db.studyScheduleDao()
+class ScheduleRepository(private val app: StudyScheduleApp) {
+    private val dao = app.database.studyScheduleDao()
 
     suspend fun getById(id: Long): StudySchedule? = dao.getById(id)
 

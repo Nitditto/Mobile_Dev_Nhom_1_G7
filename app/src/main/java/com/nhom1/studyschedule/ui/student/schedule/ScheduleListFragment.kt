@@ -28,7 +28,7 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
     private val viewModel by appViewModels {
         ScheduleViewModel(
             it.database.studyScheduleDao(),
-            ScheduleRepository(it.database),
+            ScheduleRepository(it),
             it.session.studentId
         )
     }
