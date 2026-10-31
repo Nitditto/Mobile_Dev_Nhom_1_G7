@@ -89,4 +89,6 @@
     <string name="nav_calendar">Lịch</string>
 
     <string name="notification_channel_name">Nhắc lịch học</string>
+    <string name="reminder_title">Sắp đến giờ học</string>
+    <string name="reminder_text">Sắp đến giờ học: %1$s lúc %2$s tại %3$s</string>
 </resources>
