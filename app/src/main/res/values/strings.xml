@@ -32,6 +32,18 @@
 
     <string name="student_search_hint">Tìm theo mã, tên, email, SĐT</string>
     <string name="student_contact">%1$s · %2$s</string>
+    <string name="student_add">Thêm sinh viên</string>
+    <string name="student_edit">Sửa sinh viên</string>
+    <string name="hint_student_code">Mã sinh viên</string>
+    <string name="hint_student_name">Họ tên</string>
+    <string name="hint_student_email">Email</string>
+    <string name="hint_student_phone">Số điện thoại</string>
+    <string name="hint_password_keep">Mật khẩu (để trống = giữ nguyên)</string>
+    <string name="error_student_code_taken">Mã sinh viên đã tồn tại</string>
+    <string name="error_username_taken">Tên đăng nhập đã tồn tại</string>
+    <string name="error_email_invalid">Email không hợp lệ</string>
+    <string name="error_phone_invalid">SĐT gồm 10 số, bắt đầu bằng 0</string>
+    <string name="error_password_short">Mật khẩu tối thiểu 6 ký tự</string>
 
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>

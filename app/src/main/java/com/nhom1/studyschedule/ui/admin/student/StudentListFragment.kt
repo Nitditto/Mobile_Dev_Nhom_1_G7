@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
+import com.nhom1.studyschedule.data.entity.Student
 import com.nhom1.studyschedule.data.repository.StudentRepository
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
@@ -19,9 +20,10 @@ class StudentListFragment : Fragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = StudentAdapter(onClick = {}, onDelete = {})
+        val adapter = StudentAdapter(onClick = ::openForm, onDelete = {})
 
         binding.recyclerView.adapter = adapter
+        binding.fabAdd.setOnClickListener { openForm(null) }
         binding.tilSearch.hint = getString(R.string.student_search_hint)
         binding.etSearch.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
 
@@ -32,6 +34,13 @@ class StudentListFragment : Fragment(R.layout.fragment_list) {
                     binding.tvEmpty.isVisible = it.isEmpty()
                 }
             }
+        }
+    }
+
+    private fun openForm(student: Student?) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val form = student?.let { viewModel.toForm(it) }
+            StudentFormDialog(this@StudentListFragment, form) { viewModel.save(student, it) }.show()
         }
     }
 }
