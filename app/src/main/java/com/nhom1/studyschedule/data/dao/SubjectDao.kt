@@ -34,4 +34,8 @@ interface SubjectDao {
 
     @Query("SELECT * FROM Subject WHERE id = :id")
     suspend fun getById(id: Long): Subject?
+
+    /** Pass the subject's own id as [excludeId] when editing; use 0 when creating. */
+    @Query("SELECT COUNT(*) FROM Subject WHERE subjectCode = :code AND id != :excludeId")
+    suspend fun countByCode(code: String, excludeId: Long = 0): Int
 }

@@ -1,0 +1,20 @@
+package com.nhom1.studyschedule.ui.common
+
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.nhom1.studyschedule.StudyScheduleApp
+
+val Fragment.app: StudyScheduleApp
+    get() = requireActivity().application as StudyScheduleApp
+
+/**
+ * `private val viewModel by appViewModels { SubjectViewModel(it.database.subjectDao()) }`
+ */
+inline fun <reified VM : ViewModel> Fragment.appViewModels(
+    crossinline create: (StudyScheduleApp) -> VM
+) = viewModels<VM> {
+    viewModelFactory { initializer { create(app) } }
+}

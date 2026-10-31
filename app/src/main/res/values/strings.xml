@@ -9,6 +9,27 @@
     <string name="error_login_empty">Vui lòng nhập tên đăng nhập và mật khẩu</string>
     <string name="error_login_invalid">Sai tên đăng nhập hoặc mật khẩu</string>
 
+    <string name="hint_search">Tìm kiếm</string>
+    <string name="list_empty">Chưa có dữ liệu</string>
+    <string name="action_add">Thêm</string>
+    <string name="action_save">Lưu</string>
+    <string name="action_cancel">Hủy</string>
+    <string name="action_delete">Xóa</string>
+    <string name="confirm_delete_title">Xác nhận xóa</string>
+    <string name="error_required">Không được để trống</string>
+
+    <string name="subject_search_hint">Tìm theo mã, tên, mô tả</string>
+    <string name="subject_meta">%1$s · %2$d tín chỉ</string>
+    <string name="subject_add">Thêm môn học</string>
+    <string name="subject_edit">Sửa môn học</string>
+    <string name="hint_subject_code">Mã môn</string>
+    <string name="hint_subject_name">Tên môn</string>
+    <string name="hint_subject_credits">Số tín chỉ</string>
+    <string name="hint_subject_description">Mô tả</string>
+    <string name="error_subject_code_taken">Mã môn đã tồn tại</string>
+    <string name="error_subject_credits">Số tín chỉ từ 1 đến 10</string>
+    <string name="subject_delete_message">Xóa môn \"%1$s\"? Mọi lịch học của môn này cũng sẽ bị xóa.</string>
+
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>
     <string name="nav_schedules">Lịch học</string>
