@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.ScheduleItem
+import com.nhom1.studyschedule.data.entity.ScheduleStatus
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import com.nhom1.studyschedule.ui.common.confirmDelete
@@ -32,6 +33,18 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
         binding.tilSearch.hint = getString(R.string.schedule_search_hint)
         binding.tvEmpty.text = getString(R.string.schedule_empty)
         binding.etSearch.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
+
+        binding.filterScroll.isVisible = true
+        binding.chipGroupStatus.setOnCheckedStateChangeListener { _, checkedIds ->
+            viewModel.setStatusFilter(
+                when (checkedIds.firstOrNull()) {
+                    R.id.chipPending -> ScheduleStatus.PENDING
+                    R.id.chipConfirmed -> ScheduleStatus.CONFIRMED
+                    R.id.chipCancelled -> ScheduleStatus.CANCELLED
+                    else -> null
+                }
+            )
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

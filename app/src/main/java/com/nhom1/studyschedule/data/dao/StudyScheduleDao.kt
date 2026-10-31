@@ -34,15 +34,19 @@ interface StudyScheduleDao {
     @Query("UPDATE StudySchedule SET status = :status WHERE id = :id")
     suspend fun updateStatus(id: Long, status: String)
 
-    /** List + search screen. An empty [query] returns every schedule of the student. */
+    /**
+     * List + search screen. An empty [query] returns every schedule of the student;
+     * [status] = null keeps every status, otherwise only that ScheduleStatus value.
+     */
     @Query(
         ITEM_SELECT +
             "WHERE s.studentId = :studentId AND (" +
             "sub.subjectName LIKE '%' || :query || '%' OR sub.subjectCode LIKE '%' || :query || '%' " +
             "OR s.location LIKE '%' || :query || '%') " +
+            "AND (:status IS NULL OR s.status = :status) " +
             "ORDER BY s.studyDate, s.startTime"
     )
-    fun search(studentId: Long, query: String): Flow<List<ScheduleItem>>
+    fun search(studentId: Long, query: String, status: String? = null): Flow<List<ScheduleItem>>
 
     /** Calendar screen: day = (d, d), week/month = (firstDay, lastDay), both "yyyy-MM-dd" inclusive. */
     @Query(

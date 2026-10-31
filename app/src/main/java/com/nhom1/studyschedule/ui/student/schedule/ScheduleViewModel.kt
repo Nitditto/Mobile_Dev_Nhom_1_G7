@@ -8,6 +8,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,13 +21,21 @@ class ScheduleViewModel(
 ) : ViewModel() {
     private val query = MutableStateFlow("")
 
+    /** null = all statuses, otherwise a ScheduleStatus value. */
+    private val _statusFilter = MutableStateFlow<String?>(null)
+    val statusFilter: StateFlow<String?> = _statusFilter.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val schedules: StateFlow<List<ScheduleItem>> = query
-        .flatMapLatest { dao.search(studentId, it.trim()) }
+    val schedules: StateFlow<List<ScheduleItem>> = combine(query, _statusFilter, ::Pair)
+        .flatMapLatest { (q, status) -> dao.search(studentId, q.trim(), status) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun setQuery(value: String) {
         query.value = value
+    }
+
+    fun setStatusFilter(status: String?) {
+        _statusFilter.value = status
     }
 
     fun delete(item: ScheduleItem) {
