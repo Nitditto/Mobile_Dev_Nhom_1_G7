@@ -30,6 +30,9 @@
     <string name="error_subject_credits">Số tín chỉ từ 1 đến 10</string>
     <string name="subject_delete_message">Xóa môn \"%1$s\"? Mọi lịch học của môn này cũng sẽ bị xóa.</string>
 
+    <string name="student_search_hint">Tìm theo mã, tên, email, SĐT</string>
+    <string name="student_contact">%1$s · %2$s</string>
+
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>
     <string name="nav_schedules">Lịch học</string>
