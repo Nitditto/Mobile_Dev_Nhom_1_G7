@@ -10,7 +10,9 @@ import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.Subject
 import com.nhom1.studyschedule.databinding.ItemSubjectBinding
 
-class SubjectAdapter : ListAdapter<Subject, SubjectAdapter.Holder>(Diff) {
+class SubjectAdapter(
+    private val onClick: (Subject) -> Unit
+) : ListAdapter<Subject, SubjectAdapter.Holder>(Diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(
         ItemSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,6 +30,7 @@ class SubjectAdapter : ListAdapter<Subject, SubjectAdapter.Holder>(Diff) {
                 context.getString(R.string.subject_meta, subject.subjectCode, subject.credits)
             binding.tvDescription.text = subject.description
             binding.tvDescription.isVisible = subject.description.isNotBlank()
+            binding.root.setOnClickListener { onClick(subject) }
         }
     }
 

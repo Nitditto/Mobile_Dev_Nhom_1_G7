@@ -20,6 +20,14 @@
 
     <string name="subject_search_hint">Tìm theo mã, tên, mô tả</string>
     <string name="subject_meta">%1$s · %2$d tín chỉ</string>
+    <string name="subject_add">Thêm môn học</string>
+    <string name="subject_edit">Sửa môn học</string>
+    <string name="hint_subject_code">Mã môn</string>
+    <string name="hint_subject_name">Tên môn</string>
+    <string name="hint_subject_credits">Số tín chỉ</string>
+    <string name="hint_subject_description">Mô tả</string>
+    <string name="error_subject_code_taken">Mã môn đã tồn tại</string>
+    <string name="error_subject_credits">Số tín chỉ từ 1 đến 10</string>
 
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>

@@ -22,4 +22,11 @@ class SubjectViewModel(private val dao: SubjectDao) : ViewModel() {
     fun setQuery(value: String) {
         query.value = value
     }
+
+    /** Inserts or updates. Returns false when the subject code is already used. */
+    suspend fun save(subject: Subject): Boolean {
+        if (dao.countByCode(subject.subjectCode, subject.id) > 0) return false
+        if (subject.id == 0L) dao.insert(subject) else dao.update(subject)
+        return true
+    }
 }

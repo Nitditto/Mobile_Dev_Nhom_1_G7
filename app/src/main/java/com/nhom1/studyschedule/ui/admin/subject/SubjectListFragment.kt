@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.nhom1.studyschedule.R
+import com.nhom1.studyschedule.data.entity.Subject
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import kotlinx.coroutines.launch
@@ -18,9 +19,10 @@ class SubjectListFragment : Fragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = SubjectAdapter()
+        val adapter = SubjectAdapter(onClick = ::openForm)
 
         binding.recyclerView.adapter = adapter
+        binding.fabAdd.setOnClickListener { openForm(null) }
         binding.tilSearch.hint = getString(R.string.subject_search_hint)
         binding.etSearch.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
 
@@ -32,5 +34,9 @@ class SubjectListFragment : Fragment(R.layout.fragment_list) {
                 }
             }
         }
+    }
+
+    private fun openForm(subject: Subject?) {
+        SubjectFormDialog(this, subject, viewModel::save).show()
     }
 }
