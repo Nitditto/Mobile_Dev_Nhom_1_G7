@@ -31,6 +31,9 @@ interface StudyScheduleDao {
     @Query("SELECT * FROM StudySchedule WHERE id = :id")
     suspend fun getById(id: Long): StudySchedule?
 
+    @Query(ITEM_SELECT + "WHERE s.id = :id")
+    suspend fun getItemById(id: Long): ScheduleItem?
+
     @Query("UPDATE StudySchedule SET status = :status WHERE id = :id")
     suspend fun updateStatus(id: Long, status: String)
 

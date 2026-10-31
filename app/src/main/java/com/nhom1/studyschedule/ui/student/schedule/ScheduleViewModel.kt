@@ -46,6 +46,6 @@ class ScheduleViewModel(
         repository.changeStatus(item.id, newStatus)
 
     fun delete(item: ScheduleItem) {
-        viewModelScope.launch { dao.deleteById(item.id) }
+        viewModelScope.launch { repository.delete(item.id) }
     }
 }

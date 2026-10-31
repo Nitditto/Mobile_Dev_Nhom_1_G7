@@ -2,6 +2,7 @@ package com.nhom1.studyschedule.data.repository
 
 import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.AppDatabase
+import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.ScheduleStatus
 import com.nhom1.studyschedule.data.entity.StudySchedule
 import com.nhom1.studyschedule.data.repository.BookingResult.Field
@@ -9,8 +10,9 @@ import com.nhom1.studyschedule.util.DateTimeUtils
 import java.time.LocalTime
 
 /**
- * Every write to StudySchedule goes through here so validation (and later notifications)
- * live in one place.
+ * Every write to StudySchedule goes through here so validation and side effects
+ * (reminders, change notifications) live in one place: each successful write ends
+ * with [onScheduleChanged].
  */
 class ScheduleRepository(db: AppDatabase) {
     private val dao = db.studyScheduleDao()
@@ -20,17 +22,18 @@ class ScheduleRepository(db: AppDatabase) {
     /** New bookings always start as PENDING. */
     suspend fun book(schedule: StudySchedule): BookingResult {
         val pending = schedule.copy(id = 0, status = ScheduleStatus.PENDING)
-        return validate(pending) ?: run {
-            dao.insert(pending)
-            BookingResult.Success
-        }
+        validate(pending)?.let { return it }
+        val id = dao.insert(pending)
+        notifyChanged(ScheduleEvent.Created, id)
+        return BookingResult.Success
     }
 
-    suspend fun update(schedule: StudySchedule): BookingResult =
-        validate(schedule) ?: run {
-            dao.update(schedule)
-            BookingResult.Success
-        }
+    suspend fun update(schedule: StudySchedule): BookingResult {
+        validate(schedule)?.let { return it }
+        dao.update(schedule)
+        notifyChanged(ScheduleEvent.Updated, schedule.id)
+        return BookingResult.Success
+    }
 
     /**
      * Pending / Confirmed / Cancelled. Only the status changes, so date/time rules are not
@@ -49,7 +52,28 @@ class ScheduleRepository(db: AppDatabase) {
             )?.let { return BookingResult.Conflict(it) }
         }
         dao.updateStatus(id, newStatus)
+        notifyChanged(ScheduleEvent.StatusChanged(from = current.status), id)
         return BookingResult.Success
+    }
+
+    suspend fun delete(id: Long) {
+        // Read before deleting: the hook still needs the subject/time of the removed session.
+        val item = dao.getItemById(id) ?: return
+        dao.deleteById(id)
+        onScheduleChanged(ScheduleEvent.Deleted, item)
+    }
+
+    private suspend fun notifyChanged(event: ScheduleEvent, id: Long) {
+        dao.getItemById(id)?.let { onScheduleChanged(event, it) }
+    }
+
+    /**
+     * Single hook after every successful write; [item] is the state after the write
+     * (before it, for Deleted). Intentionally empty for now: step 8 plugs reminders
+     * and change notifications in here.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    private fun onScheduleChanged(event: ScheduleEvent, item: ScheduleItem) {
     }
 
     private suspend fun validate(s: StudySchedule): BookingResult? {
