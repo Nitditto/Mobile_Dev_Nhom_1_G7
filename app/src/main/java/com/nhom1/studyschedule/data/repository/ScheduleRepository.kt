@@ -7,6 +7,7 @@ import com.nhom1.studyschedule.data.entity.ScheduleStatus
 import com.nhom1.studyschedule.data.entity.StudySchedule
 import com.nhom1.studyschedule.data.repository.BookingResult.Field
 import com.nhom1.studyschedule.notification.ChangeNotifier
+import com.nhom1.studyschedule.notification.ReminderScheduler
 import com.nhom1.studyschedule.util.DateTimeUtils
 import java.time.LocalTime
 
@@ -74,6 +75,16 @@ class ScheduleRepository(private val app: StudyScheduleApp) {
      * (before it, for Deleted).
      */
     private fun onScheduleChanged(event: ScheduleEvent, item: ScheduleItem) {
+        when (event) {
+            ScheduleEvent.Created, ScheduleEvent.Updated -> ReminderScheduler.schedule(app, item)
+            is ScheduleEvent.StatusChanged ->
+                if (item.status == ScheduleStatus.CANCELLED) {
+                    ReminderScheduler.cancel(app, item.id)
+                } else {
+                    ReminderScheduler.schedule(app, item)
+                }
+            ScheduleEvent.Deleted -> ReminderScheduler.cancel(app, item.id)
+        }
         ChangeNotifier.notify(app, event, item)
     }
 

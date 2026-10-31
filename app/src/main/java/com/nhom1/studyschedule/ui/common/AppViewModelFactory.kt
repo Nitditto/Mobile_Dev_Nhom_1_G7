@@ -13,7 +13,7 @@ val Fragment.app: StudyScheduleApp
     get() = requireActivity().application as StudyScheduleApp
 
 /**
- * `private val viewModel by appViewModels { SubjectViewModel(it.database.subjectDao()) }`
+ * `private val viewModel by appViewModels { SubjectViewModel(it) }`
  */
 inline fun <reified VM : ViewModel> Fragment.appViewModels(
     crossinline create: (StudyScheduleApp) -> VM

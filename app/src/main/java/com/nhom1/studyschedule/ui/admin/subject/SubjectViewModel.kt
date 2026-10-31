@@ -2,8 +2,9 @@ package com.nhom1.studyschedule.ui.admin.subject
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nhom1.studyschedule.data.dao.SubjectDao
+import com.nhom1.studyschedule.StudyScheduleApp
 import com.nhom1.studyschedule.data.entity.Subject
+import com.nhom1.studyschedule.notification.ReminderScheduler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class SubjectViewModel(private val dao: SubjectDao) : ViewModel() {
+class SubjectViewModel(private val app: StudyScheduleApp) : ViewModel() {
+    private val dao = app.database.subjectDao()
     private val query = MutableStateFlow("")
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,8 +33,15 @@ class SubjectViewModel(private val dao: SubjectDao) : ViewModel() {
         return true
     }
 
-    /** Also deletes every study schedule of this subject (FK cascade). */
+    /**
+     * Also deletes every study schedule of this subject (FK cascade). The cascade does not
+     * touch AlarmManager, so read the ids first and cancel their reminders afterwards.
+     */
     fun delete(subject: Subject) {
-        viewModelScope.launch { dao.delete(subject) }
+        viewModelScope.launch {
+            val scheduleIds = app.database.studyScheduleDao().getIdsBySubject(subject.id)
+            dao.delete(subject)
+            scheduleIds.forEach { ReminderScheduler.cancel(app, it) }
+        }
     }
 }

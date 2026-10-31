@@ -93,6 +93,10 @@ interface StudyScheduleDao {
         excludeId: Long = 0
     ): ScheduleItem?
 
+    /** Before deleting a subject: its sessions vanish by FK cascade, their alarms do not. */
+    @Query("SELECT id FROM StudySchedule WHERE subjectId = :subjectId")
+    suspend fun getIdsBySubject(subjectId: Long): List<Long>
+
     /** Used by the notification worker: non-cancelled sessions from [fromDate] onwards. */
     @Query(
         ITEM_SELECT +

@@ -16,7 +16,7 @@ import com.nhom1.studyschedule.ui.common.confirmDelete
 import kotlinx.coroutines.launch
 
 class SubjectListFragment : Fragment(R.layout.fragment_list) {
-    private val viewModel by appViewModels { SubjectViewModel(it.database.subjectDao()) }
+    private val viewModel by appViewModels { SubjectViewModel(it) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
