@@ -13,6 +13,7 @@ import com.nhom1.studyschedule.data.entity.Student
 import com.nhom1.studyschedule.data.repository.StudentRepository
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
+import com.nhom1.studyschedule.ui.common.confirmDelete
 import kotlinx.coroutines.launch
 
 class StudentListFragment : Fragment(R.layout.fragment_list) {
@@ -20,7 +21,7 @@ class StudentListFragment : Fragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = StudentAdapter(onClick = ::openForm, onDelete = {})
+        val adapter = StudentAdapter(onClick = ::openForm, onDelete = ::confirmDeleteStudent)
 
         binding.recyclerView.adapter = adapter
         binding.fabAdd.setOnClickListener { openForm(null) }
@@ -41,6 +42,12 @@ class StudentListFragment : Fragment(R.layout.fragment_list) {
         viewLifecycleOwner.lifecycleScope.launch {
             val form = student?.let { viewModel.toForm(it) }
             StudentFormDialog(this@StudentListFragment, form) { viewModel.save(student, it) }.show()
+        }
+    }
+
+    private fun confirmDeleteStudent(student: Student) {
+        confirmDelete(getString(R.string.student_delete_message, student.fullname)) {
+            viewModel.delete(student)
         }
     }
 }

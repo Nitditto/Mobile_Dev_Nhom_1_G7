@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class StudentViewModel(private val repository: StudentRepository) : ViewModel() {
     private val query = MutableStateFlow("")
@@ -51,4 +52,9 @@ class StudentViewModel(private val repository: StudentRepository) : ViewModel() 
                 form.password.ifEmpty { null }
             )
         }
+
+    /** Deletes the account too, so the student can no longer log in; schedules cascade. */
+    fun delete(student: Student) {
+        viewModelScope.launch { repository.delete(student) }
+    }
 }

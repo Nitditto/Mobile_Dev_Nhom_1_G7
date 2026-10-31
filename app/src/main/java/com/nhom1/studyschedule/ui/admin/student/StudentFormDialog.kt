@@ -1,6 +1,7 @@
 package com.nhom1.studyschedule.ui.admin.student
 
 import android.util.Patterns
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -55,17 +56,19 @@ class StudentFormDialog(
             fragment.viewLifecycleOwner.lifecycleScope.launch {
                 when (onSave(input)) {
                     SaveResult.SUCCESS -> dialog.dismiss()
-                    SaveResult.CODE_TAKEN -> binding.tilCode.error =
-                        fragment.getString(R.string.error_student_code_taken)
-                    SaveResult.USERNAME_TAKEN -> binding.tilUsername.error =
-                        fragment.getString(R.string.error_username_taken)
+                    SaveResult.CODE_TAKEN -> {
+                        binding.tilCode.error = fragment.getString(R.string.error_student_code_taken)
+                    }
+                    SaveResult.USERNAME_TAKEN -> {
+                        binding.tilUsername.error = fragment.getString(R.string.error_username_taken)
+                    }
                 }
             }
         }
     }
 
     private fun validate(): StudentForm? {
-        fun text(view: android.widget.EditText) = view.text?.toString().orEmpty().trim()
+        fun text(view: EditText) = view.text?.toString().orEmpty().trim()
         val code = text(binding.etCode).uppercase()
         val name = text(binding.etName)
         val email = text(binding.etEmail)

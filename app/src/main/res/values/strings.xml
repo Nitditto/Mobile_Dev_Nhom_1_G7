@@ -43,6 +43,7 @@
     <string name="error_username_taken">Tên đăng nhập đã tồn tại</string>
     <string name="error_email_invalid">Email không hợp lệ</string>
     <string name="error_phone_invalid">SĐT gồm 10 số, bắt đầu bằng 0</string>
+    <string name="student_delete_message">Xóa sinh viên \"%1$s\"? Tài khoản và toàn bộ lịch học của sinh viên này cũng sẽ bị xóa.</string>
     <string name="error_password_short">Mật khẩu tối thiểu 6 ký tự</string>
 
     <string name="nav_students">Sinh viên</string>
