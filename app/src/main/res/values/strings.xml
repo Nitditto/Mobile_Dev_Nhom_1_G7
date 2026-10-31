@@ -28,6 +28,7 @@
     <string name="hint_subject_description">Mô tả</string>
     <string name="error_subject_code_taken">Mã môn đã tồn tại</string>
     <string name="error_subject_credits">Số tín chỉ từ 1 đến 10</string>
+    <string name="subject_delete_message">Xóa môn \"%1$s\"? Mọi lịch học của môn này cũng sẽ bị xóa.</string>
 
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>

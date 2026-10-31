@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class SubjectViewModel(private val dao: SubjectDao) : ViewModel() {
     private val query = MutableStateFlow("")
@@ -28,5 +29,10 @@ class SubjectViewModel(private val dao: SubjectDao) : ViewModel() {
         if (dao.countByCode(subject.subjectCode, subject.id) > 0) return false
         if (subject.id == 0L) dao.insert(subject) else dao.update(subject)
         return true
+    }
+
+    /** Also deletes every study schedule of this subject (FK cascade). */
+    fun delete(subject: Subject) {
+        viewModelScope.launch { dao.delete(subject) }
     }
 }

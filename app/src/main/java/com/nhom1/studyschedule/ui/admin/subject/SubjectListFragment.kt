@@ -12,6 +12,7 @@ import com.nhom1.studyschedule.R
 import com.nhom1.studyschedule.data.entity.Subject
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
+import com.nhom1.studyschedule.ui.common.confirmDelete
 import kotlinx.coroutines.launch
 
 class SubjectListFragment : Fragment(R.layout.fragment_list) {
@@ -19,7 +20,7 @@ class SubjectListFragment : Fragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val binding = FragmentListBinding.bind(view)
-        val adapter = SubjectAdapter(onClick = ::openForm)
+        val adapter = SubjectAdapter(onClick = ::openForm, onDelete = ::confirmDeleteSubject)
 
         binding.recyclerView.adapter = adapter
         binding.fabAdd.setOnClickListener { openForm(null) }
@@ -38,5 +39,11 @@ class SubjectListFragment : Fragment(R.layout.fragment_list) {
 
     private fun openForm(subject: Subject?) {
         SubjectFormDialog(this, subject, viewModel::save).show()
+    }
+
+    private fun confirmDeleteSubject(subject: Subject) {
+        confirmDelete(getString(R.string.subject_delete_message, subject.subjectName)) {
+            viewModel.delete(subject)
+        }
     }
 }

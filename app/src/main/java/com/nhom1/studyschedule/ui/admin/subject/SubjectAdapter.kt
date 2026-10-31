@@ -11,8 +11,9 @@ import com.nhom1.studyschedule.data.entity.Subject
 import com.nhom1.studyschedule.databinding.ItemSubjectBinding
 
 class SubjectAdapter(
-    private val onClick: (Subject) -> Unit
-) : ListAdapter<Subject, SubjectAdapter.Holder>(Diff) {
+    private val onClick: (Subject) -> Unit,
+    private val onDelete: (Subject) -> Unit
+): ListAdapter<Subject, SubjectAdapter.Holder>(Diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = Holder(
         ItemSubjectBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,6 +32,7 @@ class SubjectAdapter(
             binding.tvDescription.text = subject.description
             binding.tvDescription.isVisible = subject.description.isNotBlank()
             binding.root.setOnClickListener { onClick(subject) }
+            binding.btnDelete.setOnClickListener { onDelete(subject) }
         }
     }
 
