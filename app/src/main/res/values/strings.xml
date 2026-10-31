@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lịch học sinh viên</string>
+    <string name="login_subtitle">Đăng nhập để quản lý lịch học</string>
+    <string name="hint_username">Tên đăng nhập</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="action_login">Đăng nhập</string>
+    <string name="action_logout">Đăng xuất</string>
+    <string name="error_login_empty">Vui lòng nhập tên đăng nhập và mật khẩu</string>
+    <string name="error_login_invalid">Sai tên đăng nhập hoặc mật khẩu</string>
+
+    <string name="nav_students">Sinh viên</string>
+    <string name="nav_subjects">Môn học</string>
+    <string name="nav_schedules">Lịch học</string>
+    <string name="nav_calendar">Lịch</string>
+
+    <string name="notification_channel_name">Nhắc lịch học</string>
+</resources>
