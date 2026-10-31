@@ -36,6 +36,7 @@ interface StudentDao {
     @Query("SELECT * FROM Student WHERE accountId = :accountId LIMIT 1")
     suspend fun getByAccountId(accountId: Long): Student?
 
-    @Query("SELECT COUNT(*) FROM Student WHERE studentCode = :code")
-    suspend fun countByCode(code: String): Int
+    /** Pass the student's own id as [excludeId] when editing; use 0 when creating. */
+    @Query("SELECT COUNT(*) FROM Student WHERE studentCode = :code AND id != :excludeId")
+    suspend fun countByCode(code: String, excludeId: Long = 0): Int
 }
