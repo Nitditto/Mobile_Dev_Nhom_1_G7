@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Calendar screen strings, kept apart from strings.xml to avoid merge conflicts. -->
+<resources>
+    <string-array name="calendar_weekdays">
+        <item>Thứ Hai</item>
+        <item>Thứ Ba</item>
+        <item>Thứ Tư</item>
+        <item>Thứ Năm</item>
+        <item>Thứ Sáu</item>
+        <item>Thứ Bảy</item>
+        <item>Chủ Nhật</item>
+    </string-array>
+    <string-array name="calendar_weekdays_short">
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+        <item>T7</item>
+        <item>CN</item>
+    </string-array>
+
+    <string name="calendar_mode_day">Ngày</string>
+    <string name="calendar_mode_week">Tuần</string>
+    <string name="calendar_mode_month">Tháng</string>
+    <string name="calendar_today">Hôm nay</string>
+    <string name="calendar_prev">Trước</string>
+    <string name="calendar_next">Sau</string>
+
+    <string name="calendar_title_day">%1$s, %2$s</string>
+    <string name="calendar_title_week">%1$s – %2$s</string>
+    <string name="calendar_title_month">Tháng %1$d/%2$d</string>
+    <string name="calendar_day_header">%1$s, %2$s</string>
+    <string name="calendar_day_header_today">%1$s, %2$s · Hôm nay</string>
+    <string name="calendar_session_count">%1$d buổi</string>
+    <string name="calendar_cell_description">%1$s, %2$d buổi học</string>
+    <string name="calendar_empty_day">Không có buổi học nào trong ngày</string>
+    <string name="calendar_empty_week">Không có buổi học nào trong tuần</string>
+</resources>
