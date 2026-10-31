@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.StudySchedule" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <!-- Read-only text field that opens a date/time picker on tap. -->
+    <style name="Widget.StudySchedule.PickerField" parent="">
+        <item name="android:focusable">false</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:inputType">none</item>
+        <item name="android:clickable">true</item>
+    </style>
 </resources>

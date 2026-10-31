@@ -70,6 +70,22 @@ interface StudyScheduleDao {
         excludeId: Long = 0
     ): Int
 
+    /** Same rule as [countConflicts], but returns the first clashing session to show the user. */
+    @Query(
+        ITEM_SELECT +
+            "WHERE s.studentId = :studentId AND s.studyDate = :date " +
+            "AND s.status != 'CANCELLED' AND s.id != :excludeId " +
+            "AND s.startTime < :endTime AND s.endTime > :startTime " +
+            "ORDER BY s.startTime LIMIT 1"
+    )
+    suspend fun findConflict(
+        studentId: Long,
+        date: String,
+        startTime: String,
+        endTime: String,
+        excludeId: Long = 0
+    ): ScheduleItem?
+
     /** Used by the notification worker: non-cancelled sessions from [fromDate] onwards. */
     @Query(
         ITEM_SELECT +

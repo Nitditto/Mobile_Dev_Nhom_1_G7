@@ -51,11 +51,31 @@
     <string name="schedule_subject">%1$s (%2$s)</string>
     <string name="schedule_date_time">%1$s · %2$s – %3$s</string>
     <string name="schedule_location">Địa điểm: %1$s</string>
-    <string name="booking_coming_soon">Chức năng đặt lịch đang được phát triển</string>
     <string name="schedule_delete_message">Xóa lịch học \"%1$s\" ngày %2$s lúc %3$s?</string>
     <string name="status_pending">Chờ xác nhận</string>
     <string name="status_confirmed">Đã xác nhận</string>
     <string name="status_cancelled">Đã hủy</string>
+
+    <string name="booking_title_new">Đặt lịch học</string>
+    <string name="booking_title_edit">Sửa lịch học</string>
+    <string name="hint_booking_subject">Môn học</string>
+    <string name="hint_booking_date">Ngày học</string>
+    <string name="hint_booking_start">Bắt đầu</string>
+    <string name="hint_booking_end">Kết thúc</string>
+    <string name="hint_booking_location">Địa điểm</string>
+    <string name="action_book">Đặt lịch</string>
+    <string name="action_back">Quay lại</string>
+    <string name="error_booking_subject">Vui lòng chọn môn học</string>
+    <string name="error_booking_time_order">Giờ kết thúc phải sau giờ bắt đầu</string>
+    <string name="error_booking_past_date">Ngày học không được ở quá khứ</string>
+    <string name="error_booking_past_time">Giờ bắt đầu đã qua</string>
+    <string name="error_booking_pick_date">Vui lòng chọn ngày học</string>
+    <string name="error_booking_pick_time">Vui lòng chọn giờ</string>
+    <string name="booking_conflict_title">Trùng lịch</string>
+    <string name="booking_conflict_message">Trùng với buổi \"%1$s\" ngày %2$s, %3$s – %4$s. Vui lòng chọn giờ khác.</string>
+    <string name="booking_saved">Đã đặt lịch, đang chờ xác nhận</string>
+    <string name="booking_updated">Đã cập nhật lịch học</string>
+    <string name="error_booking_missing">Lịch học không còn tồn tại</string>
 
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>

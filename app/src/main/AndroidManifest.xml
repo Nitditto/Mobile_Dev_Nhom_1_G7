@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".ui.admin.AdminHomeActivity" />
         <activity android:name=".ui.student.StudentHomeActivity" />
+        <activity android:name=".ui.student.booking.BookingActivity" />
     </application>
 
 </manifest>
