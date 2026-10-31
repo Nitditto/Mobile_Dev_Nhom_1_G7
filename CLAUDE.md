@@ -8,7 +8,10 @@
 
 ## Quy trình làm việc
 
-- Không tạo branch: commit và push thẳng lên `main`
-  (thay cho quy trình branch + PR trong `docs/PLAN.md`).
-- Bỏ qua test cần emulator (`androidTest`, `connectedAndroidTest`):
-  không viết, không chạy. Chỉ dùng unit test JVM (`app/src/test`).
+- Mỗi bước làm trên branch riêng tạo từ `main` mới nhất
+  (`feature/<ten-buoc>`, bước cuối dùng `release/v1.0`).
+- Không commit thẳng lên `main`. Xong bước: build xanh, push branch,
+  rồi merge vào `main` (qua Pull Request) theo `docs/PLAN.md`.
+- Được dùng emulator: chạy app để test thủ công, được viết và chạy
+  test `androidTest` / `connectedAndroidTest`, ngoài unit test JVM
+  (`app/src/test`).
