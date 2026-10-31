@@ -53,6 +53,8 @@ class DayGroupAdapter : ListAdapter<DayRow, RecyclerView.ViewHolder>(Diff) {
 
         fun bind(row: DayRow.Session) {
             bindSchedule(binding, row.item)
+            // Read-only here: edit, status changes and delete live in the schedule list.
+            binding.btnMore.isVisible = false
             binding.btnDelete.isVisible = false
         }
     }
