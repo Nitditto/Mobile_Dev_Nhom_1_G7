@@ -46,6 +46,8 @@
     <string name="student_delete_message">Xóa sinh viên \"%1$s\"? Tài khoản và toàn bộ lịch học của sinh viên này cũng sẽ bị xóa.</string>
     <string name="error_password_short">Mật khẩu tối thiểu 6 ký tự</string>
 
+    <string name="schedule_search_hint">Tìm theo môn học, địa điểm</string>
+    <string name="schedule_empty">Chưa có lịch học nào</string>
     <string name="schedule_subject">%1$s (%2$s)</string>
     <string name="schedule_date_time">%1$s · %2$s – %3$s</string>
     <string name="schedule_location">Địa điểm: %1$s</string>
