@@ -1,5 +1,7 @@
 package com.nhom1.studyschedule.ui.student.booking
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -33,7 +35,8 @@ class BookingActivity : AppCompatActivity() {
         BookingViewModel(
             it.database.subjectDao(),
             ScheduleRepository(it.database),
-            it.session.studentId
+            it.session.studentId,
+            intent.getLongExtra(EXTRA_SCHEDULE_ID, BookingViewModel.NEW)
         )
     }
 
@@ -45,6 +48,10 @@ class BookingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.toolbar.setNavigationOnClickListener { finish() }
+        if (viewModel.isEditMode) {
+            binding.toolbar.setTitle(R.string.booking_title_edit)
+            binding.btnSave.setText(R.string.action_save)
+        }
         binding.actvSubject.setOnItemClickListener { _, _, position, _ ->
             viewModel.setSubject(subjects[position].id)
             binding.tilSubject.error = null
@@ -91,8 +98,9 @@ class BookingActivity : AppCompatActivity() {
         lifecycleScope.launch {
             when (val result = viewModel.save()) {
                 BookingResult.Success -> {
-                    Toast.makeText(this@BookingActivity, R.string.booking_saved, Toast.LENGTH_SHORT)
-                        .show()
+                    val message = if (viewModel.isEditMode) R.string.booking_updated
+                    else R.string.booking_saved
+                    Toast.makeText(this@BookingActivity, message, Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 is BookingResult.Conflict -> showConflict(result.with)
@@ -169,5 +177,15 @@ class BookingActivity : AppCompatActivity() {
             }
         }
         picker.show(supportFragmentManager, if (isStart) "start" else "end")
+    }
+
+    companion object {
+        const val EXTRA_SCHEDULE_ID = "schedule_id"
+
+        /** No [scheduleId] = book a new session; otherwise edit that session. */
+        fun intent(context: Context, scheduleId: Long? = null): Intent =
+            Intent(context, BookingActivity::class.java).apply {
+                scheduleId?.let { putExtra(EXTRA_SCHEDULE_ID, it) }
+            }
     }
 }

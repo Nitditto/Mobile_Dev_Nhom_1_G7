@@ -2,7 +2,6 @@ package com.nhom1.studyschedule.ui.student.schedule
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -14,6 +13,7 @@ import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.databinding.FragmentListBinding
 import com.nhom1.studyschedule.ui.common.appViewModels
 import com.nhom1.studyschedule.ui.common.confirmDelete
+import com.nhom1.studyschedule.ui.student.booking.BookingActivity
 import com.nhom1.studyschedule.util.DateTimeUtils
 import kotlinx.coroutines.launch
 
@@ -45,14 +45,12 @@ class ScheduleListFragment : Fragment(R.layout.fragment_list) {
 
     /** FAB: book a new session. */
     private fun onAddClick() {
-        // TODO(Trường): open BookingActivity in create mode.
-        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+        startActivity(BookingActivity.intent(requireContext()))
     }
 
-    /** Item tap: edit the session; pass item.id as BookingActivity.EXTRA_SCHEDULE_ID. */
+    /** Item tap: edit the session. */
     private fun onItemClick(item: ScheduleItem) {
-        // TODO(Trường): open BookingActivity in edit mode with item.id.
-        Toast.makeText(requireContext(), R.string.booking_coming_soon, Toast.LENGTH_SHORT).show()
+        startActivity(BookingActivity.intent(requireContext(), item.id))
     }
 
     private fun confirmDeleteSchedule(item: ScheduleItem) {

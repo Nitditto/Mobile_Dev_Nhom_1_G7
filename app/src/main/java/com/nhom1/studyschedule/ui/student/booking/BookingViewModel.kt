@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /** Form values; null date/time = not picked yet. Formats follow DateTimeUtils. */
 data class BookingForm(
@@ -25,17 +26,33 @@ data class BookingForm(
     val location: String = ""
 )
 
+/** [scheduleId] = id to edit, or [NEW] to book a new session. */
 class BookingViewModel(
     subjectDao: SubjectDao,
     private val repository: ScheduleRepository,
-    private val studentId: Long
+    private val studentId: Long,
+    private val scheduleId: Long
 ) : ViewModel() {
+
+    val isEditMode: Boolean get() = scheduleId != NEW
+    private var original: StudySchedule? = null
 
     val subjects: StateFlow<List<Subject>> = subjectDao.observeAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _form = MutableStateFlow(BookingForm())
     val form: StateFlow<BookingForm> = _form.asStateFlow()
+
+    init {
+        if (isEditMode) viewModelScope.launch {
+            loadOriginal()?.let {
+                _form.value = BookingForm(it.subjectId, it.studyDate, it.startTime, it.endTime, it.location)
+            }
+        }
+    }
+
+    private suspend fun loadOriginal(): StudySchedule? =
+        original ?: repository.getById(scheduleId).also { original = it }
 
     fun setSubject(id: Long) = _form.update { it.copy(subjectId = id) }
     fun setDate(date: String) = _form.update { it.copy(date = date) }
@@ -52,15 +69,23 @@ class BookingViewModel(
         val end = f.endTime
             ?: return BookingResult.Invalid(Field.END_TIME, R.string.error_booking_pick_time)
 
-        return repository.book(
-            StudySchedule(
-                studentId = studentId,
-                subjectId = f.subjectId,
-                studyDate = date,
-                startTime = start,
-                endTime = end,
-                location = f.location.trim()
-            )
+        // Editing keeps id, owner and status; only the form fields change.
+        val base = if (isEditMode) {
+            loadOriginal() ?: return BookingResult.Invalid(Field.SUBJECT, R.string.error_booking_missing)
+        } else {
+            StudySchedule(studentId = studentId, subjectId = 0, studyDate = "", startTime = "", endTime = "", location = "")
+        }
+        val schedule = base.copy(
+            subjectId = f.subjectId,
+            studyDate = date,
+            startTime = start,
+            endTime = end,
+            location = f.location.trim()
         )
+        return if (isEditMode) repository.update(schedule) else repository.book(schedule)
+    }
+
+    companion object {
+        const val NEW = 0L
     }
 }
