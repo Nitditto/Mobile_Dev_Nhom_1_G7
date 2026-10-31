@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".StudyScheduleApp"
@@ -22,6 +23,17 @@
         <activity android:name=".ui.admin.AdminHomeActivity" />
         <activity android:name=".ui.student.StudentHomeActivity" />
         <activity android:name=".ui.student.booking.BookingActivity" />
+
+        <receiver
+            android:name=".notification.ReminderReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".notification.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
