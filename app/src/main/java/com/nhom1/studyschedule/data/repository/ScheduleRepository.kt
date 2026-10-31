@@ -6,6 +6,7 @@ import com.nhom1.studyschedule.data.entity.ScheduleItem
 import com.nhom1.studyschedule.data.entity.ScheduleStatus
 import com.nhom1.studyschedule.data.entity.StudySchedule
 import com.nhom1.studyschedule.data.repository.BookingResult.Field
+import com.nhom1.studyschedule.notification.ChangeNotifier
 import com.nhom1.studyschedule.util.DateTimeUtils
 import java.time.LocalTime
 
@@ -70,11 +71,10 @@ class ScheduleRepository(private val app: StudyScheduleApp) {
 
     /**
      * Single hook after every successful write; [item] is the state after the write
-     * (before it, for Deleted). Intentionally empty for now: step 8 plugs reminders
-     * and change notifications in here.
+     * (before it, for Deleted).
      */
-    @Suppress("UNUSED_PARAMETER")
     private fun onScheduleChanged(event: ScheduleEvent, item: ScheduleItem) {
+        ChangeNotifier.notify(app, event, item)
     }
 
     private suspend fun validate(s: StudySchedule): BookingResult? {

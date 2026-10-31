@@ -91,4 +91,12 @@
     <string name="notification_channel_name">Nhắc lịch học</string>
     <string name="reminder_title">Sắp đến giờ học</string>
     <string name="reminder_text">Sắp đến giờ học: %1$s lúc %2$s tại %3$s</string>
+
+    <string name="change_title">Lịch học thay đổi</string>
+    <string name="change_session">%1$s ngày %2$s, %3$s–%4$s tại %5$s</string>
+    <string name="change_created">Đã đặt lịch: %1$s</string>
+    <string name="change_updated">Đã cập nhật lịch: %1$s</string>
+    <string name="change_cancelled">Đã hủy lịch: %1$s</string>
+    <string name="change_status">Lịch %1$s chuyển sang: %2$s</string>
+    <string name="change_deleted">Đã xóa lịch: %1$s</string>
 </resources>
