@@ -18,6 +18,9 @@
     <string name="confirm_delete_title">Xác nhận xóa</string>
     <string name="error_required">Không được để trống</string>
 
+    <string name="subject_search_hint">Tìm theo mã, tên, mô tả</string>
+    <string name="subject_meta">%1$s · %2$d tín chỉ</string>
+
     <string name="nav_students">Sinh viên</string>
     <string name="nav_subjects">Môn học</string>
     <string name="nav_schedules">Lịch học</string>
